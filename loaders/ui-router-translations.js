@@ -1,68 +1,32 @@
-const eau = require('esprima-ast-utils');
-
 const { getOptions } = require('loader-utils');
-const fs = require('fs');
 const _ = require('lodash');
-
-const acorn = require("acorn")
-const walk = require("acorn/dist/walk");
-
-const babelParser = require('@babel/parser');
+const fs = require("fs");
 
 module.exports = function (source) {
-    // const options = getOptions(this);
 
-    // const ast = eau.parse(source);
-    // let translationNode, resolveNode;
+    let options = getOptions(this);
 
-    babelParser.parse(source, {
-        allowImportExportEverywhere: true
-    });
+    let translations = _.get(source.match(/translations\s*:\s*\[([^\]]+)\]/), 1);
 
-    // eau.traverse(ast, (node) => {
-    //     if (node.type === 'Property' && node.key.name === 'translations') {
-    //         translationNode = node.value;
-    //     }
+    if (translations) {
 
-    //     if (node.type === 'Property' && node.key.name === 'resolve') {
-    //         resolveNode = node.value;
-    //     }
-    // });
+        translations = translations.split(",").map(x => x.replace(/('|"|\s)/g, "")).filter(x => x);
+        translations = translations.filter(t => fs.existsSync(`${options.root}/${t}/translations`))
 
-    // if(translationNode && resolveNode) {
-    //     const translationsStr = eau.getCode(translationNode);
-    //     const regExpExtractTranslations = /'(.*?)'/gm;
+        let s = `dynamicTranslations($q, $translate, asyncLoader) { return $q.all(`;
 
-    //     let translations = translationsStr.match(regExpExtractTranslations);
+        translations.forEach((translation, index) => {
+            s += `\nimport(\`${options.root}/${translation}/translations/Messages_\${$translate.use()}.xml\`).then(module => asyncLoader.addTranslations(module.default))${ index === translations.length - 1 ? '' : ','}`;
+        });
 
-    //     if(translations) {
-    //         translations = _.chain(translations)
-    //                             .map(path => path.replace(/'/g, ""))
-    //                             .filter(translation => fs.existsSync(`${options.root}/${translation}/translations`))
-    //                             .value();
-            
-    //         console.log(translations);
-    //     }
+        s += `)\n.then(() => $translate.refresh()).then(() => true) }`
 
-    //     if(translations.length > 0) {
-    //         let s = `dynamicTranslations($q, $translate, asyncLoader) {
-    //             return $q.all(`;
+        if (/resolve\s*:\s*{/.test(source)) {
+            source = source.replace(/resolve\s*:\s*{/, `resolve: {\n${s},`);
+        } else {
+            source = source.replace(/(translations\s*:\s*\[[^\]]+\]\s*,)/, `$1 \nresolve: {\n${s}},`);
+        }
+    }
 
-    //         translations.forEach((translation, index) => {
-    //             s += `\nimport(\`${options.root}/${translation}/translations/Messages_\${$translate.use()}.xml\`)
-    //                 .then(module => asyncLoader.addTranslations(module.default))${ index === translations.length - 1 ? '' : ','}`;
-    //         });
-
-    //         s += `)
-    //             .then(() => $translate.refresh()).then(() => true)
-    //         }`
-
-    //         const searchCode = eau.getCode(resolveNode);
-    //         const code = searchCode.replace(/\}$/, `${s}}`);
-
-    //         return source.replace(searchCode, code);
-    //     }
-    // }
-
-    return source;    
+    return source;
 };
