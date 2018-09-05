@@ -13,13 +13,14 @@ module.exports = function (source) {
         translations = translations.split(",").map(x => x.replace(/('|"|\s)/g, "")).filter(x => x);
         translations = translations.filter(t => fs.existsSync(`${options.root}/${t}/translations`))
 
-        let s = `dynamicTranslations($q, $translate, asyncLoader) { return $q.all(`;
+        let s = `dynamicTranslations($q, $translate, asyncLoader) { const imports = [`;
 
-        translations.forEach((translation, index) => {
-            s += `\nimport(\`${options.root}/${translation}/translations/Messages_\${$translate.use()}.xml\`).then(module => asyncLoader.addTranslations(module.default))${ index === translations.length - 1 ? '' : ','}`;
+        translations.forEach((translation) => {
+            s += ` import(\`${options.root}/${translation}/translations/Messages_\${$translate.use()}.xml\`).then(i => i.default),`;
         });
 
-        s += `)\n.then(() => $translate.refresh()).then(() => true) }`
+
+        s += `]; imports.forEach(p => asyncLoader.addTranslations(p)); return $q.all(imports).then(() => $translate.refresh()); }`
 
         if (/resolve\s*:\s*{/.test(source)) {
             source = source.replace(/resolve\s*:\s*{/, `resolve: {\n${s},`);
