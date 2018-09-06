@@ -26,16 +26,6 @@ module.exports = function (source) {
         });
         // filter translations that does not exists
         translations = translations.filter(t => fs.existsSync(t))
-    } else {
-        translations = [];
-    }
-
-    if (options.addCurrentPath) {
-        const currentDirTranslations = path.join(path.dirname(this.resourcePath), "translations");
-        if (fs.existsSync(currentDirTranslations)) {
-            translations.push(currentDirTranslations);
-        }
-
     }
 
     if (_.get(translations, "length") > 0) {

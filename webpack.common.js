@@ -100,7 +100,6 @@ module.exports = (opts) => ({
             loader: path.resolve(__dirname, './loaders/ui-router-translations.js'),
             options: {
                 root: opts.root,
-                addCurrentPath: true
             }
         }]
         },
