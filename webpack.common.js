@@ -41,6 +41,7 @@ module.exports = (opts) => ({
                 RemcalcPlugin,
               ],
               paths: opts.lessPath,
+              relativeUrls: false,
             },
           },
         ],
@@ -123,5 +124,17 @@ module.exports = (opts) => ({
     //     ],
     //   },
     ],
+  },
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: "initial",
+          test: path.resolve(process.cwd(), "node_modules"),
+          name: "vendor",
+          enforce: true
+        }
+      }
+    }
   }
 });
