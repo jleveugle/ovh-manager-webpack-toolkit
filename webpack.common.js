@@ -2,9 +2,13 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const RemcalcPlugin = require('less-plugin-remcalc');
 const WebpackBar = require('webpackbar');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const get = require('lodash/get');
 
 module.exports = (opts) => ({
   plugins: [
+    new CopyWebpackPlugin(get(opts, "assets.files", []), get(opts, "assets.options", {})),
     new HtmlWebpackPlugin({
       template: opts.template,
     }),
@@ -18,6 +22,13 @@ module.exports = (opts) => ({
       {
         test: /\.html$/,
         loader: 'raw-loader',
+      },
+      {
+        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000
+        }
       },
       {
         test: /\.less$/,
@@ -45,19 +56,6 @@ module.exports = (opts) => ({
             },
           },
         ],
-      },
-      {
-        test: /\.(ttf|eot|woff|woff2)$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[name].[ext]',
-          },
-        },
-      },
-      {
-        test: /\.svg$/,
-        loader: 'svg-inline-loader',
       },
       {
         test: /\.scss$/,

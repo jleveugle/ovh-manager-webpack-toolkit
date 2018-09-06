@@ -33,13 +33,13 @@ module.exports = {
     new FriendlyErrorsWebpackPlugin(),
   ],
   serve: {
-    // logLevel: 'silent',
-    // devMiddleware: {
-    //   logLevel: 'silent',
-    // },
-    // hotClient: {
-    //   logLevel: 'silent',
-    // },
+    logLevel: 'silent',
+    devMiddleware: {
+      logLevel: 'silent',
+    },
+    hotClient: {
+      logLevel: 'silent',
+    },
     content: [__dirname],
     add: (app, middleware) => {
       // since we're manipulating the order of middleware added, we need to handle
