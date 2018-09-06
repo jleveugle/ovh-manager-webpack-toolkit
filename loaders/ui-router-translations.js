@@ -1,31 +1,57 @@
 const { getOptions } = require('loader-utils');
 const _ = require('lodash');
-const fs = require("fs");
+const fs = require('fs');
+const path = require('path');
 
+/**
+ * Dynamic translations loader for ui-router and angular-translate
+ */
 module.exports = function (source) {
 
     let options = getOptions(this);
 
+    // extract translations property from ui-router state declaration
     let translations = _.get(source.match(/translations\s*:\s*\[([^\]]+)\]/), 1);
 
     if (translations) {
-
+        // extract translations paths from array
         translations = translations.split(",").map(x => x.replace(/('|"|\s)/g, "")).filter(x => x);
-        translations = translations.filter(t => fs.existsSync(`${options.root}/${t}/translations`))
-
-        let s = `dynamicTranslations($q, $translate, asyncLoader) { const imports = [`;
-
-        translations.forEach((translation) => {
-            s += ` import(\`${options.root}/${translation}/translations/Messages_\${$translate.use()}.xml\`).then(i => i.default),`;
+        // transform each path to absolute path
+        translations = translations.map(t => path.join(options.root, t, "translations"))
+        // report a warning for translations path that does not exists
+        translations.forEach(t => {
+            if (!fs.existsSync(t)) {
+                this.emitWarning(new Error(`Missing translations directory: '${t}'`));
+            }
         });
+        // filter translations that does not exists
+        translations = translations.filter(t => fs.existsSync(t))
+    } else {
+        translations = [];
+    }
 
+    if (options.addCurrentPath) {
+        const currentDirTranslations = path.join(path.dirname(this.resourcePath), "translations");
+        if (fs.existsSync(currentDirTranslations)) {
+            translations.push(currentDirTranslations);
+        }
 
-        s += `]; imports.forEach(p => asyncLoader.addTranslations(p)); return $q.all(imports).then(() => $translate.refresh()); }`
+    }
 
+    if (_.get(translations, "length") > 0) {
+        // craft js resolve code to load translations dynamically
+        let jsCode = `dynamicTranslations($q, $translate, asyncLoader) { const imports = [`;
+        translations.forEach((translation) => {
+            jsCode += ` import(\`${translation}/Messages_\${$translate.use()}.xml\`).then(i => i.default),`;
+        });
+        jsCode += `]; imports.forEach(p => asyncLoader.addTranslations(p)); return $q.all(imports).then(() => $translate.refresh()); }`
+
+        // if a resolve already exists, prepend the code to inject
         if (/resolve\s*:\s*{/.test(source)) {
-            source = source.replace(/resolve\s*:\s*{/, `resolve: {\n${s},`);
+            source = source.replace(/resolve\s*:\s*{/, `resolve: {\n${jsCode},`);
+        // otherwise add a resolve function along with the code to inject
         } else {
-            source = source.replace(/(translations\s*:\s*\[[^\]]+\]\s*,)/, `$1 \nresolve: {\n${s}},`);
+            source = source.replace(/(translations\s*:\s*\[[^\]]+\]\s*,)/, `$1 \nresolve: {\n${jsCode}},`);
         }
     }
 
