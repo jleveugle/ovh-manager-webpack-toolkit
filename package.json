@@ -5,13 +5,12 @@
   "main": "index.js",
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.0.0-beta.56",
     "@babel/generator": "^7.0.0",
     "@babel/parser": "^7.0.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.56",
     "@babel/preset-env": "^7.0.0-beta.56",
-    "abstract-syntax-tree": "^1.0.2",
     "angular-template-url-loader": "^1.0.2",
     "babel-eslint": "^8.2.6",
     "babel-loader": "^8.0.0-beta",
