@@ -4,11 +4,11 @@ const RemcalcPlugin = require('less-plugin-remcalc');
 const WebpackBar = require('webpackbar');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const get = require('lodash/get');
+const _ = require('lodash');
 
 module.exports = (opts) => ({
   plugins: [
-    new CopyWebpackPlugin(get(opts, "assets.files", []), get(opts, "assets.options", {})),
+    new CopyWebpackPlugin(_.get(opts, "assets.files", []), _.get(opts, "assets.options", {})),
     new HtmlWebpackPlugin({
       template: opts.template,
     }),
