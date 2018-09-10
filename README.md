@@ -47,15 +47,10 @@ const { config } = require('@ovh-ux/ovh-manager-webpack-toolkit')({
   },
 });
 
-// merge config and export webpack configuration
+// merge the configuration and export it
 module.exports = merge(config, {
   entry: _.assign({
-    main: path.resolve(__dirname, './client/app/index.js'), // main entry point
-  }, {
-    config: [
-      // merge dev or prod config depending on webpack serve environment
-      path.resolve(__dirname, `client/app/config/${process.env.WEBPACK_SERVE ? 'dev' : 'prod'}.js`)
-    ],
+    main: path.resolve(__dirname, './client/app/index.js'),
   }),
   output: {
     path: path.resolve(__dirname, 'dist'),
