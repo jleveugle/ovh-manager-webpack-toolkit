@@ -3,29 +3,48 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const RemcalcPlugin = require('less-plugin-remcalc');
 const WebpackBar = require('webpackbar');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
 const _ = require('lodash');
 
+// The common webpack configuration
+
 module.exports = (opts) => ({
+
   plugins: [
-    new CopyWebpackPlugin(_.get(opts, "assets.files", []), _.get(opts, "assets.options", {})),
+    // copy application assets
+    // note: we could use the html-loader plugin but it wouldn't work for dynamic src attributes!
+    new CopyWebpackPlugin(
+      _.get(opts, "assets.files", []),
+      _.get(opts, "assets.options", {})
+    ),
+
+    // see : https://github.com/jantimon/html-webpack-plugin
     new HtmlWebpackPlugin({
-      template: opts.template,
+      template: opts.template, // path to application's main html template
     }),
+
+    // display pretty loading bars
     new WebpackBar(),
   ],
+
   resolveLoader: {
+
+    // webpack module resolution paths
     modules: [
-      './node_modules',
-      path.resolve(__dirname, 'node_modules')
+      './node_modules',                       // #1 check in module's relative node_module directory
+      path.resolve(__dirname, 'node_modules') // #2 check in application's node_module directory
     ]
   },
+
   module: {
     rules: [
+
+      // load HTML files as string (raw-loader)
       {
         test: /\.html$/,
         loader: 'raw-loader',
       },
+
+      // load images & fonts into file or convert to base64 if size < 10Kib
       {
         test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
         loader: 'url-loader',
@@ -33,6 +52,8 @@ module.exports = (opts) => ({
           limit: 10000
         }
       },
+
+      // load Less files
       {
         test: /\.less$/,
         use: [
@@ -40,19 +61,17 @@ module.exports = (opts) => ({
             loader: 'style-loader', // creates style nodes from JS strings
           }, {
             loader: 'css-loader', // translates CSS into CommonJS
-          },
-          {
-            loader: 'resolve-url-loader',
+          }, {
+            loader: 'resolve-url-loader', // specify relative path for Less files
             options: {
                 root: opts.root,
             },
-          },
-          {
+          }, {
             loader: 'less-loader', // compiles Less to CSS
             options: {
               sourceMap: true,
               plugins: [
-                RemcalcPlugin,
+                RemcalcPlugin, // required by ovh-ui-kit
               ],
               paths: opts.lessPath,
               relativeUrls: false,
@@ -60,6 +79,8 @@ module.exports = (opts) => ({
           },
         ],
       },
+
+      // load Sass files
       {
         test: /\.scss$/,
         use: [
@@ -68,68 +89,63 @@ module.exports = (opts) => ({
           'sass-loader', // compiles Sass to CSS
         ],
       },
+
+      // load translations (convert from xml to json)
       {
         test: /\.xml$/,
         loader: path.resolve(__dirname, './loaders/translations.js'),
       },
+
+      // load JS files
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: /node_modules/, // we don't want babel to process vendors files
         use: [
           {
-            loader: 'angular-template-url-loader',
+            loader: 'angular-template-url-loader', // inline angular templates
             options: {
                 basePath: opts.basePath,
             }
           },
           {
-            loader: 'babel-loader',
+            loader: 'babel-loader', // babelify JS sources
             options: {
               presets: [
-                require.resolve('@babel/preset-env')
+                require.resolve('@babel/preset-env') // babel preset configuration
               ],
               plugins: [
-                require.resolve('@babel/plugin-syntax-dynamic-import'),
-                require.resolve('babel-plugin-angularjs-annotate'),
+                require.resolve('@babel/plugin-syntax-dynamic-import'), // dynamic es6 imports
+                require.resolve('babel-plugin-angularjs-annotate'), // ng annotate
               ],
             },
           },
         ],
       },
+
+      // inject translation imports into JS source code, given proper ui-router state 'translations' property
       {
         test: /\.js$/,
         exclude: /node_modules/,
         enforce: 'pre',
-        use: [{
+        use: [
+          {
             loader: path.resolve(__dirname, './loaders/ui-router-translations.js'),
             options: {
                 root: opts.root,
             }
-        }]
-        },
-    //   {
-    //     // ESLint is only used for the packages folder, at this moment, we can't merge rules
-    //     // because we want to use babel and ngAnnotate all our code and dependencies if needed
-    //     // But we don't want to check all our dependencies with ESLint
-    //     // (+ webpack follow symlinks by default)
-    //     // If you use this rule for babel, we will have some issues in production with obfuscation
-    //     test: /\.js$/,
-    //     exclude: /node_modules/,
-    //     include: /packages/,
-    //     enforce: 'pre',
-    //     use: [
-    //       {
-    //         loader: 'eslint-loader',
-    //         options: {
-    //           configFile: path.join(__dirname, '../../.eslintrc'),
-    //         },
-    //       },
-    //     ],
-    //   },
-    ],
-  },
+          }
+        ]
+      },
+
+    ], // \rules
+  }, // \module
+
   optimization: {
+
+    // bundle spliting configuration
     splitChunks: {
+
+      // vendors bundle containing node_modules source code
       cacheGroups: {
         vendor: {
           chunks: "initial",
@@ -139,5 +155,6 @@ module.exports = (opts) => ({
         }
       }
     }
-  }
+
+  } // \optimization
 });
