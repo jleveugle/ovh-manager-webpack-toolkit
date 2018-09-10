@@ -30,6 +30,7 @@ The following configuration parameters are _optionals_ :
 ### Example
 
 ```js
+// import config and initialize parameters
 const { config } = require('@ovh-ux/ovh-manager-webpack-toolkit')({
   template: path.resolve(__dirname, './client/index.html'),
   basePath: path.resolve(__dirname, './client'),
@@ -46,12 +47,13 @@ const { config } = require('@ovh-ux/ovh-manager-webpack-toolkit')({
   },
 });
 
-
+// merge config and export webpack configuration
 module.exports = merge(config, {
   entry: _.assign({
-    main: path.resolve(__dirname, './client/app/index.js'),
+    main: path.resolve(__dirname, './client/app/index.js'), // main entry point
   }, {
     config: [
+      // merge dev or prod config depending on webpack serve environment
       path.resolve(__dirname, `client/app/config/${process.env.WEBPACK_SERVE ? 'dev' : 'prod'}.js`)
     ],
   }),
