@@ -15,7 +15,10 @@ module.exports = (opts) => ({
     new WebpackBar(),
   ],
   resolveLoader: {
-    modules: [ path.resolve('./node_modules') ]
+    modules: [
+      './node_modules',
+      path.resolve(__dirname, 'node_modules')
+    ]
   },
   module: {
     rules: [
@@ -82,10 +85,12 @@ module.exports = (opts) => ({
           {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'],
+              presets: [
+                require.resolve('@babel/preset-env')
+              ],
               plugins: [
-                '@babel/plugin-syntax-dynamic-import',
-                'angularjs-annotate',
+                require.resolve('@babel/plugin-syntax-dynamic-import'),
+                require.resolve('babel-plugin-angularjs-annotate'),
               ],
             },
           },
