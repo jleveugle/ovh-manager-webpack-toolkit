@@ -38,7 +38,6 @@
     "webpack-merge": "^4.1.4",
     "webpack-serve": "^2.0.2",
     "webpack-serve-overlay": "^0.3.0",
-    "webpackbar": "^2.6.3",
-    "cli-table": "^0.3.1"
+    "webpackbar": "^2.6.3"
   }
 }
