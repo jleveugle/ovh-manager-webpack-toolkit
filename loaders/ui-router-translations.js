@@ -21,7 +21,7 @@ module.exports = function (source) {
         // report a warning for translations path that does not exists
         translations.forEach(t => {
             if (!fs.existsSync(t)) {
-                this.emitWarning(new Error(`Missing translations directory: '${t}'`));
+                this.emitError(new Error(`Missing translations directory: '${t}'`));
             }
         });
         // filter translations that does not exists
