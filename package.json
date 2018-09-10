@@ -1,10 +1,13 @@
 {
   "name": "@ovh-ux/ovh-manager-webpack-toolkit",
+  "description": "OVH manager shared webpack buid configuration",
+  "license": "BSD-3-Clause",
+  "author": "OVH SAS",
   "version": "1.0.0",
-  "description": "",
+  "keywords": [
+    "webpack"
+  ],
   "main": "index.js",
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@babel/core": "^7.0.0-beta.56",
     "@babel/generator": "^7.0.0",
@@ -35,9 +38,7 @@
     "webpack-merge": "^4.1.4",
     "webpack-serve": "^2.0.2",
     "webpack-serve-overlay": "^0.3.0",
-    "webpackbar": "^2.6.3"
-  },
-  "dependencies": {
+    "webpackbar": "^2.6.3",
     "cli-table": "^0.3.1"
   }
 }
