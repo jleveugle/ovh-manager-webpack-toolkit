@@ -1,6 +1,6 @@
 # OVH Manager Webpack Toolkit
 
-Extensible webpack configuration shared across OVH Manager.
+Extensible webpack configuration for the OVH Manager.
 
 ## Usage
 
