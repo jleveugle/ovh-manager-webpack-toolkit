@@ -30,8 +30,8 @@ module.exports = (opts) => ({
 
     // webpack module resolution paths
     modules: [
-      './node_modules',                       // #1 check in module's relative node_module directory
-      path.resolve(__dirname, 'node_modules') // #2 check in application's node_module directory
+      './node_modules',              // #1 check in module's relative node_module directory
+      path.resolve('./node_modules') // #2 check in application's node_module directory
     ]
   },
 
