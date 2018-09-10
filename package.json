@@ -1,6 +1,6 @@
 {
   "name": "@ovh-ux/ovh-manager-webpack-toolkit",
-  "description": "OVH manager shared webpack buid configuration",
+  "description": "OVH manager shared webpack configuration",
   "license": "BSD-3-Clause",
   "author": "OVH SAS",
   "version": "1.0.0",
