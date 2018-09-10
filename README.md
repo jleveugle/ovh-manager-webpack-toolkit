@@ -11,10 +11,12 @@ To import the configuration, simply add ovh-manager-webpack-toolkit as a devDepe
 yarn add -D @ovh-ux/ovh-manager-webpack-toolkit
 ```
 
-In order to use and extends this configuration, some manager dependent parameters needs
-to be provided. Please refer to the informations and example below.
+In order to use and extends this configuration, some manager relative parameters needs
+to be provided. Please refer to the parameters and example below.
 
-The following configuration parameters needs to be provided :
+### Parameters
+
+The following configuration parameters needs to be _provided_ :
 
  - template: path to manager main template file
  - basePath: the base path of the manager
@@ -22,10 +24,10 @@ The following configuration parameters needs to be provided :
  - root: root path of the manager
  - assets.files: see https://github.com/webpack-contrib/copy-webpack-plugin
 
-The following configuration parameters are optionals :
+The following configuration parameters are _optionals_ :
  - assets.options: see https://github.com/webpack-contrib/copy-webpack-plugin
 
-## Example
+### Example
 
 ```js
 const { config } = require('@ovh-ux/ovh-manager-webpack-toolkit')({
