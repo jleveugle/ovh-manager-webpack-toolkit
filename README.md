@@ -18,14 +18,14 @@ to be provided. Please refer to the parameters and example below.
 
 The following configuration parameters needs to be _provided_ :
 
- - template: path to manager main template file
- - basePath: the base path of the manager
- - lessPath: manager paths containing less files
- - root: root path of the manager
- - assets.files: see https://github.com/webpack-contrib/copy-webpack-plugin
+ - _template_: path to manager main template file
+ - _basePath_: the base path of the manager
+ - _lessPath_: manager paths containing less files
+ - _root_: root path of the manager
+ - _assets.files_: see https://github.com/webpack-contrib/copy-webpack-plugin
 
 The following configuration parameters are _optionals_ :
- - assets.options: see https://github.com/webpack-contrib/copy-webpack-plugin
+ - _assets.options_: see https://github.com/webpack-contrib/copy-webpack-plugin
 
 ### Example
 
@@ -51,7 +51,9 @@ module.exports = merge(config, {
   entry: _.assign({
     main: path.resolve(__dirname, './client/app/index.js'),
   }, {
-    config: [path.resolve(__dirname, `client/app/config/${process.env.WEBPACK_SERVE ? 'dev' : 'prod'}.js`)],
+    config: [
+      path.resolve(__dirname, `client/app/config/${process.env.WEBPACK_SERVE ? 'dev' : 'prod'}.js`)
+    ],
   }),
   output: {
     path: path.resolve(__dirname, 'dist'),
