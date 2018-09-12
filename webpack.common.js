@@ -102,12 +102,6 @@ module.exports = (opts) => ({
         exclude: /node_modules/, // we don't want babel to process vendors files
         use: [
           {
-            loader: 'angular-template-url-loader', // inline angular templates
-            options: {
-                basePath: opts.basePath,
-            }
-          },
-          {
             loader: 'babel-loader', // babelify JS sources
             options: {
               presets: [
