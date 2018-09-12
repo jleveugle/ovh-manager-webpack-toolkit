@@ -4,6 +4,7 @@ const RemcalcPlugin = require('less-plugin-remcalc');
 const WebpackBar = require('webpackbar');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const _ = require('lodash');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 // The common webpack configuration
 
@@ -24,6 +25,11 @@ module.exports = (opts) => ({
 
     // display pretty loading bars
     new WebpackBar(),
+
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css",
+    })
   ],
 
   resolveLoader: {
@@ -57,9 +63,8 @@ module.exports = (opts) => ({
       {
         test: /\.less$/,
         use: [
-          {
-            loader: 'style-loader', // creates style nodes from JS strings
-          }, {
+          MiniCssExtractPlugin.loader
+          , {
             loader: 'css-loader', // translates CSS into CommonJS
           }, {
             loader: 'resolve-url-loader', // specify relative path for Less files
@@ -84,7 +89,7 @@ module.exports = (opts) => ({
       {
         test: /\.scss$/,
         use: [
-          'style-loader', // creates style nodes from JS strings
+          MiniCssExtractPlugin.loader,
           'css-loader', // translates CSS into CommonJS
           'sass-loader', // compiles Sass to CSS
         ],
