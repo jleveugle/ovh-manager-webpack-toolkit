@@ -1,5 +1,4 @@
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 const proxy = require('http-proxy-middleware');
@@ -26,9 +25,6 @@ router.all('*', convert(proxy(proxyOptions)));
 module.exports = {
   mode: 'development',
   plugins: [
-    new BundleAnalyzerPlugin({
-      openAnalyzer: false,
-    }),
     new DuplicatePackageCheckerPlugin(),
     new FriendlyErrorsWebpackPlugin(),
   ],
@@ -48,7 +44,6 @@ module.exports = {
         middleware.content({
           index: 'index.htm',
         });
-
         // this example assumes router must be added last
         app.use(router.routes());
       });
