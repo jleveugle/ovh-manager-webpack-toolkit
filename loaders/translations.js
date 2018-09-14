@@ -2,9 +2,7 @@
 function formatTranslation(object, loader) {
   const result = {};
   object.forEach((elem) => {
-    if (elem.hasOwnProperty('id') &&
-        elem.hasOwnProperty('text') &&
-        !~elem.id.indexOf('>')) { // eslint-disable-line no-prototype-builtins
+    if (elem.hasOwnProperty('id') && elem.hasOwnProperty('text') && !~elem.id.indexOf('>')) { // eslint-disable-line no-prototype-builtins, no-bitwise
       result[elem.id] = elem.text;
     } else {
       loader.emitError(new Error(`Invalid translation xml format: '${loader.resourcePath}'`));
@@ -13,8 +11,7 @@ function formatTranslation(object, loader) {
   return result;
 }
 
-module.exports = function (source) {
-
+module.exports = (source) => {
   // translation extraction regex
   const reg = /<translation\s+id="([\w-]+?)"\s*(qtlid="([0-9]+)")?\s*(?:translate="none")?\s*?>((?:.|\n|\r)*?)<\/translation>/gi;
 

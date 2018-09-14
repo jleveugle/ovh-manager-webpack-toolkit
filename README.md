@@ -32,12 +32,12 @@ The following configuration parameters are _optionals_ :
 ```js
 // import config and initialize parameters
 const { config } = require('@ovh-ux/ovh-manager-webpack-toolkit')({
-  template: path.resolve(__dirname, './client/index.html'),
-  basePath: path.resolve(__dirname, './client'),
+  template: './client/index.html',
+  basePath: './client',
   lessPath: [
-    path.resolve('./client/app'),
-    path.resolve('./client/components'),
-    path.resolve('./node_modules'),
+    './client/app',
+    './client/components',
+    './node_modules',
   ],
   root: path.resolve(__dirname, './client/app'),
   assets: {
@@ -50,7 +50,7 @@ const { config } = require('@ovh-ux/ovh-manager-webpack-toolkit')({
 // merge the configuration and export it
 module.exports = merge(config, {
   entry: _.assign({
-    main: path.resolve(__dirname, './client/app/index.js'),
+    main: './client/app/index.js',
   }),
   output: {
     path: path.resolve(__dirname, 'dist'),
