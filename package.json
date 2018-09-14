@@ -3,10 +3,13 @@
   "description": "OVH manager shared webpack configuration",
   "license": "BSD-3-Clause",
   "author": "OVH SAS",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": [
     "webpack"
   ],
+  "scripts": {
+    "release": "semver -i"
+  },
   "main": "index.js",
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -41,5 +44,8 @@
     "webpack-serve": "^2.0.2",
     "webpack-serve-overlay": "^0.3.0",
     "webpackbar": "^2.6.3"
+  },
+  "devDependencies": {
+    "semver": "^5.5.1"
   }
 }
