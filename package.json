@@ -1,5 +1,5 @@
 {
-  "name": "@ovh-ux/ovh-manager-webpack-toolkit",
+  "name": "@ovh-ux/manager-webpack-config",
   "description": "OVH manager shared webpack configuration",
   "license": "BSD-3-Clause",
   "author": "OVH SAS",
@@ -8,7 +8,6 @@
     "webpack"
   ],
   "scripts": {
-    "release": "semver -i",
     "test": "eslint ."
   },
   "husky": {
@@ -57,7 +56,6 @@
   "devDependencies": {
     "eslint": "^5.5.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "semver": "^5.5.1"
+    "eslint-plugin-import": "^2.14.0"
   }
 }

@@ -6,7 +6,7 @@ const path = require('path');
 /**
  * Dynamic translations loader for ui-router and angular-translate
  */
-module.exports = (source) => {
+module.exports = function uiRouterTranslations(source) {
   const options = getOptions(this);
 
   // extract translations property from ui-router state declaration
